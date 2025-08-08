@@ -30,9 +30,9 @@ const CheckInScreen = () => {
   const [submitting, setSubmitting] = useState<boolean>(false);
 
   const statusOptions = [
-    { value: 'Arrived', label: 'Geldim', icon: '✅', color: '#4CAF50' },
-    { value: 'Late', label: 'Geç Kaldım', icon: '⏰', color: '#FF9800' },
-    { value: 'Lost', label: 'Kayboldum', icon: '🤔', color: '#F44336' },
+    { value: 'Arrived', label: 'Arrived', icon: '✅', color: '#4CAF50' },
+    { value: 'Late', label: 'Late', icon: '⏰', color: '#FF9800' },
+    { value: 'Lost', label: 'Lost', icon: '🤔', color: '#F44336' },
   ];
 
   useEffect(() => {
@@ -41,7 +41,7 @@ const CheckInScreen = () => {
         const loc = await getLocation();
         setLocation(loc);
       } catch (error) {
-        setLocation('Konum alınamadı');
+        setLocation('Location not available');
       } finally {
         setLoading(false);
       }
@@ -52,7 +52,7 @@ const CheckInScreen = () => {
     try {
       const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
       if (!permissionResult.granted) {
-        Alert.alert('İzin Gerekli', 'Kamera erişimi için izin gereklidir!');
+        Alert.alert('Permission Required', 'Camera access permission is required!');
         return;
       }
 
@@ -66,23 +66,23 @@ const CheckInScreen = () => {
         setImageUri(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert('Hata', 'Fotoğraf çekilirken bir hata oluştu.');
+      Alert.alert('Error', 'An error occurred while taking the photo.');
     }
   };
 
   const handleSubmit = async () => {
     if (!location || !imageUri || !status) {
-      Alert.alert('Eksik Bilgi', 'Lütfen tüm alanları doldurun.');
+      Alert.alert('Missing Information', 'Please fill in all fields.');
       return;
     }
 
     Alert.alert(
-      'Check-In Onayı',
-      'Bu bilgilerle check-in yapmak istediğinizden emin misiniz?',
+      'Confirm Check-In',
+      'Are you sure you want to check in with this information?',
       [
-        { text: 'İptal', style: 'cancel' },
+        { text: 'Cancel', style: 'cancel' },
         {
-          text: 'Onayla',
+          text: 'Confirm',
           onPress: async () => {
             setSubmitting(true);
             // Simulate API call
@@ -104,7 +104,7 @@ const CheckInScreen = () => {
       <LinearGradient colors={['#667eea', '#764ba2']} style={styles.loadingContainer}>
         <StatusBar barStyle="light-content" backgroundColor="transparent" translucent />
         <ActivityIndicator size="large" color="#FFFFFF" />
-        <Text style={styles.loadingText}>Konum alınıyor...</Text>
+        <Text style={styles.loadingText}>Getting location...</Text>
       </LinearGradient>
     );
   }
@@ -117,14 +117,14 @@ const CheckInScreen = () => {
         {/* Header */}
         <View style={styles.header}>
           <Text style={styles.title}>Check-In</Text>
-          <Text style={styles.subtitle}>Tur konumunuza giriş yapın</Text>
+          <Text style={styles.subtitle}>Check in to your tour location</Text>
         </View>
 
         {/* Location Card */}
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📍</Text>
-            <Text style={styles.cardTitle}>Konum</Text>
+            <Text style={styles.cardTitle}>Location</Text>
           </View>
           <Text style={styles.locationText}>{location}</Text>
         </View>
@@ -133,20 +133,20 @@ const CheckInScreen = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📷</Text>
-            <Text style={styles.cardTitle}>Fotoğraf</Text>
+            <Text style={styles.cardTitle}>Photo</Text>
           </View>
           
           {imageUri ? (
             <View style={styles.imageContainer}>
               <Image source={{ uri: imageUri }} style={styles.image} />
               <TouchableOpacity style={styles.retakeButton} onPress={handleSelectImage}>
-                <Text style={styles.retakeButtonText}>Yeniden Çek</Text>
+                <Text style={styles.retakeButtonText}>Retake Photo</Text>
               </TouchableOpacity>
             </View>
           ) : (
             <TouchableOpacity style={styles.photoButton} onPress={handleSelectImage}>
               <Text style={styles.photoButtonIcon}>📸</Text>
-              <Text style={styles.photoButtonText}>Fotoğraf Çek</Text>
+              <Text style={styles.photoButtonText}>Take Photo</Text>
             </TouchableOpacity>
           )}
         </View>
@@ -155,7 +155,7 @@ const CheckInScreen = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📌</Text>
-            <Text style={styles.cardTitle}>Durum</Text>
+            <Text style={styles.cardTitle}>Status</Text>
           </View>
           
           <View style={styles.statusContainer}>
@@ -194,7 +194,7 @@ const CheckInScreen = () => {
             {submitting ? (
               <ActivityIndicator size="small" color="#FFFFFF" />
             ) : (
-              <Text style={styles.submitButtonText}>Check-In Yap</Text>
+              <Text style={styles.submitButtonText}>Check-In</Text>
             )}
           </LinearGradient>
         </TouchableOpacity>

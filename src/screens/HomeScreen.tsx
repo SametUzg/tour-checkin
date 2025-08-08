@@ -34,7 +34,11 @@ const HomeScreen = () => {
       title: 'Status',
       description: 'View your check-in status',
       icon: '📊',
-      onPress: () => navigation.navigate('Status'),
+      onPress: () => navigation.navigate('Status', {
+        location: 'Sample Location',
+        imageUri: 'https://via.placeholder.com/300x200',
+        status: 'Arrived'
+      }),
       gradient: ['#4ECDC4', '#6EE7DF'],
     },
   ];
@@ -49,8 +53,8 @@ const HomeScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header Section */}
         <View style={styles.header}>
-          <Text style={styles.welcomeText}>Hoş Geldiniz!</Text>
-          <Text style={styles.subtitleText}>Tour Check-In Uygulaması</Text>
+          <Text style={styles.welcomeText}>Welcome!</Text>
+          <Text style={styles.subtitleText}>Tour Check-In Application</Text>
         </View>
 
         {/* Main Content */}
@@ -81,12 +85,12 @@ const HomeScreen = () => {
           {/* Info Section */}
           <View style={styles.infoContainer}>
             <View style={styles.infoCard}>
-              <Text style={styles.infoTitle}>📱 Nasıl Kullanılır?</Text>
+              <Text style={styles.infoTitle}>📱 How to Use?</Text>
               <Text style={styles.infoText}>
-                1. Check-In butonuna tıklayın{'\n'}
-                2. Konumunuzu onaylayın{'\n'}
-                3. Fotoğraf çekin{'\n'}
-                4. Check-in işlemini tamamlayın
+                1. Click the Check-In button{'\n'}
+                2. Confirm your location{'\n'}
+                3. Take a photo{'\n'}
+                4. Complete the check-in process
               </Text>
             </View>
           </View>
@@ -174,7 +178,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: 16,
     padding: 20,
-    backdropFilter: 'blur(10px)',
   },
   infoTitle: {
     fontSize: 20,

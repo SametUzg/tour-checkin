@@ -3,24 +3,26 @@ import { View, Text, Image, StyleSheet, ScrollView, StatusBar, TouchableOpacity 
 import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { LinearGradient } from 'expo-linear-gradient';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type StatusScreenRouteProp = RouteProp<RootStackParamList, 'Status'>;
+type StatusScreenNavigationProp = NativeStackNavigationProp<RootStackParamList, 'Status'>;
 
 const StatusScreen = () => {
   const route = useRoute<StatusScreenRouteProp>();
-  const navigation = useNavigation();
+  const navigation = useNavigation<StatusScreenNavigationProp>();
   const { location, imageUri, status } = route.params;
 
   const getStatusInfo = (status: string) => {
     switch (status) {
       case 'Arrived':
-        return { icon: '✅', label: 'Geldim', color: '#4CAF50', message: 'Başarıyla check-in yaptınız!' };
+        return { icon: '✅', label: 'Arrived', color: '#4CAF50', message: 'Successfully checked in!' };
       case 'Late':
-        return { icon: '⏰', label: 'Geç Kaldım', color: '#FF9800', message: 'Geç kaldığınız kaydedildi.' };
+        return { icon: '⏰', label: 'Late', color: '#FF9800', message: 'Your late arrival has been recorded.' };
       case 'Lost':
-        return { icon: '🤔', label: 'Kayboldum', color: '#F44336', message: 'Kaybolduğunuz bildirildi.' };
+        return { icon: '🤔', label: 'Lost', color: '#F44336', message: 'Your lost status has been reported.' };
       default:
-        return { icon: '📌', label: status, color: '#667eea', message: 'Check-in tamamlandı.' };
+        return { icon: '📌', label: status, color: '#667eea', message: 'Check-in completed.' };
     }
   };
 
@@ -33,7 +35,7 @@ const StatusScreen = () => {
       <ScrollView contentContainerStyle={styles.scrollContainer}>
         {/* Header */}
         <View style={styles.header}>
-          <Text style={styles.title}>Check-In Tamamlandı</Text>
+          <Text style={styles.title}>Check-In Completed</Text>
           <Text style={styles.subtitle}>{statusInfo.message}</Text>
         </View>
 
@@ -42,9 +44,9 @@ const StatusScreen = () => {
           <View style={styles.successIconContainer}>
             <Text style={styles.successIcon}>🎉</Text>
           </View>
-          <Text style={styles.successTitle}>Başarılı!</Text>
+          <Text style={styles.successTitle}>Success!</Text>
           <Text style={styles.successMessage}>
-            Check-in işleminiz başarıyla tamamlandı. Tur rehberiniz bilgilendirildi.
+            Your check-in has been completed successfully. Your tour guide has been notified.
           </Text>
         </View>
 
@@ -52,7 +54,7 @@ const StatusScreen = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📌</Text>
-            <Text style={styles.cardTitle}>Durum</Text>
+            <Text style={styles.cardTitle}>Status</Text>
           </View>
           <View style={[styles.statusBadge, { backgroundColor: statusInfo.color }]}>
             <Text style={styles.statusIcon}>{statusInfo.icon}</Text>
@@ -64,7 +66,7 @@ const StatusScreen = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📍</Text>
-            <Text style={styles.cardTitle}>Konum</Text>
+            <Text style={styles.cardTitle}>Location</Text>
           </View>
           <Text style={styles.locationText}>{location}</Text>
         </View>
@@ -73,7 +75,7 @@ const StatusScreen = () => {
         <View style={styles.card}>
           <View style={styles.cardHeader}>
             <Text style={styles.cardIcon}>📷</Text>
-            <Text style={styles.cardTitle}>Çekilen Fotoğraf</Text>
+            <Text style={styles.cardTitle}>Photo Taken</Text>
           </View>
           <Image source={{ uri: imageUri }} style={styles.image} />
         </View>
@@ -88,7 +90,7 @@ const StatusScreen = () => {
               colors={['#4CAF50', '#45a049']}
               style={styles.actionGradient}
             >
-              <Text style={styles.actionButtonText}>Ana Sayfaya Dön</Text>
+              <Text style={styles.actionButtonText}>Back to Home</Text>
             </LinearGradient>
           </TouchableOpacity>
 
@@ -96,7 +98,7 @@ const StatusScreen = () => {
             style={styles.secondaryButton}
             onPress={() => navigation.navigate('CheckIn')}
           >
-            <Text style={styles.secondaryButtonText}>Yeni Check-In</Text>
+            <Text style={styles.secondaryButtonText}>New Check-In</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
