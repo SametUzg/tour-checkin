@@ -50,24 +50,97 @@ const CheckInScreen = () => {
 
   const handleSelectImage = async () => {
     try {
+      // Check camera permissions first
       const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
+      
       if (!permissionResult.granted) {
-        Alert.alert('Permission Required', 'Camera access permission is required!');
+        Alert.alert(
+          'Camera Permission Required',
+          'This app needs camera access to take photos for check-in. Please enable camera permissions in Settings.',
+          [
+            { text: 'Cancel', style: 'cancel' },
+            { 
+              text: 'Open Settings', 
+              onPress: () => {
+                // On iOS, we can't directly open settings, but we can guide the user
+                Alert.alert(
+                  'How to Enable Camera',
+                  'Go to Settings > Privacy & Security > Camera > Tour Check-In and enable it.',
+                  [{ text: 'OK' }]
+                );
+              }
+            }
+          ]
+        );
         return;
       }
 
+      // Launch camera with iOS-optimized settings
       const result = await ImagePicker.launchCameraAsync({
         allowsEditing: true,
         aspect: [4, 3],
         quality: 0.8,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+        presentationStyle: ImagePicker.UIImagePickerPresentationStyle.FULL_SCREEN,
+        // iOS specific options
+        base64: false,
+        exif: false,
       });
 
-      if (!result.canceled) {
+      if (!result.canceled && result.assets && result.assets.length > 0) {
         setImageUri(result.assets[0].uri);
       }
     } catch (error) {
-      Alert.alert('Error', 'An error occurred while taking the photo.');
+      console.error('Camera error:', error);
+      Alert.alert(
+        'Camera Error',
+        'Unable to open camera. Please make sure camera permissions are granted and try again.',
+        [{ text: 'OK' }]
+      );
     }
+  };
+
+  const handleSelectFromGallery = async () => {
+    try {
+      const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+      
+      if (!permissionResult.granted) {
+        Alert.alert(
+          'Photo Library Permission Required',
+          'This app needs access to your photo library to select photos for check-in.',
+          [{ text: 'OK' }]
+        );
+        return;
+      }
+
+      const result = await ImagePicker.launchImageLibraryAsync({
+        allowsEditing: true,
+        aspect: [4, 3],
+        quality: 0.8,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsMultipleSelection: false,
+      });
+
+      if (!result.canceled && result.assets && result.assets.length > 0) {
+        setImageUri(result.assets[0].uri);
+      }
+    } catch (error) {
+      console.error('Gallery error:', error);
+      Alert.alert('Error', 'Unable to access photo library.');
+    }
+  };
+
+  const showPhotoOptions = () => {
+    Alert.alert(
+      'Select Photo',
+      'Choose how you want to add a photo:',
+      [
+        { text: 'Cancel', style: 'cancel' },
+        { text: 'Take Photo', onPress: handleSelectImage },
+        { text: 'Choose from Gallery', onPress: handleSelectFromGallery },
+      ]
+    );
   };
 
   const handleSubmit = async () => {
@@ -139,14 +212,14 @@ const CheckInScreen = () => {
           {imageUri ? (
             <View style={styles.imageContainer}>
               <Image source={{ uri: imageUri }} style={styles.image} />
-              <TouchableOpacity style={styles.retakeButton} onPress={handleSelectImage}>
-                <Text style={styles.retakeButtonText}>Retake Photo</Text>
+              <TouchableOpacity style={styles.retakeButton} onPress={showPhotoOptions}>
+                <Text style={styles.retakeButtonText}>Change Photo</Text>
               </TouchableOpacity>
             </View>
           ) : (
-            <TouchableOpacity style={styles.photoButton} onPress={handleSelectImage}>
+            <TouchableOpacity style={styles.photoButton} onPress={showPhotoOptions}>
               <Text style={styles.photoButtonIcon}>📸</Text>
-              <Text style={styles.photoButtonText}>Take Photo</Text>
+              <Text style={styles.photoButtonText}>Add Photo</Text>
             </TouchableOpacity>
           )}
         </View>

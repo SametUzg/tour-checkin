@@ -13,17 +13,48 @@
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.tourcheckin.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "This app needs access to camera to take photos for tour check-in.",
+        "NSLocationWhenInUseUsageDescription": "This app needs access to location to record your check-in location.",
+        "NSLocationAlwaysAndWhenInUseUsageDescription": "This app needs access to location to record your check-in location.",
+        "NSPhotoLibraryUsageDescription": "This app needs access to photo library to save check-in photos.",
+        "NSPhotoLibraryAddUsageDescription": "This app needs access to photo library to save check-in photos."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.tourcheckin.app",
+      "permissions": [
+        "android.permission.CAMERA",
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.WRITE_EXTERNAL_STORAGE",
+        "android.permission.READ_EXTERNAL_STORAGE"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends.",
+          "cameraPermission": "The app accesses your camera to let you take photos for check-in."
+        }
+      ],
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
+        }
+      ]
+    ]
   }
 }
